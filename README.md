@@ -31,22 +31,6 @@ grunt.initConfig({
 });
 ```
 
-
-    var env = this.target,
-      options = this.options({
-        dest: 'firebase.json',
-        json: {
-          firebase: '',
-          public: 'app',
-          ignore: [
-            'firebase.json',
-            '**/.*',
-            '**/node_modules/**'
-          ]
-        }
-      }),
-      firebaseJson;
-
 ### Options
 
 #### options.dest
@@ -124,6 +108,15 @@ Javascript should follow the provided .jsbeautifyrc spec.
 * Run `grunt jsbeautifier:fix` to format your code according to the spec
 
 ## Release History
+
+### 0.1.2
+
+* [bug] Remove unsupported option from Gruntfile
+* [docs] Remove erroneous info from README
+
+### 0.1.1
+
+* [bug] Fix travis CI config
 
 ### 0.1.0
 

@@ -67,8 +67,7 @@ module.exports = function (grunt) {
       defaultOptions: 'production-app',
       customOptions: {
         options: {
-          dest: 'tmp/custom-options.json',
-          public: 'dist'
+          dest: 'tmp/custom-options.json'
         },
         firebase: 'some-company-app',
         public: 'dist',

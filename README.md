@@ -2,6 +2,8 @@
 
 > Configure local directory for firebase deployments
 
+[![Build Status](https://travis-ci.org/QulinaryOrg/grunt-configure-firebase.svg?branch=master)](https://travis-ci.org/QulinaryOrg/grunt-configure-firebase)
+
 **NOTE: works with firebase CLI version 3.* - if you need 2.* use 0.1.2 of this plugin**
 
 ## Getting Started

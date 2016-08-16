@@ -25,14 +25,14 @@ module.exports = function (grunt) {
             public: 'app',
             rewrites: [],
             ignore: [
-              'firebase.json',
               'Gruntfile.js',
-              'bower.json',
-              'package.json',
-              '.travis.yml',
               'README.md',
+              '.travis.yml',
               '*rc',
-              '**/node_modules/**'
+              '**/node_modules/**',
+              'bower.json',
+              'firebase.json',
+              'package.json'
             ]
           }
         }
@@ -49,6 +49,10 @@ module.exports = function (grunt) {
     switch (typeof this.data) {
     case 'object':
       firebaseJson = extend(true, options.json, this.data);
+      // if provided, don't merge the ignore values of the array just use them
+      if (this.data.hosting && Array.isArray(this.data.hosting.ignore)) {
+        firebaseJson.hosting.ignore = this.data.hosting.ignore;
+      }
       delete firebaseJson.options;
       break;
     case 'string':

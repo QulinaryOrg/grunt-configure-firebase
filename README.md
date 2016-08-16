@@ -189,7 +189,11 @@ Javascript should follow the provided .jsbeautifyrc spec.
 
 ## Release History
 
-### 1.0.0
+### 1.0.1
+
+* [bug] Fix jshint when using v6.3.1
+
+## 1.0.0
 
 * [enhancement] Update to reflect google's new firebase configuration
 

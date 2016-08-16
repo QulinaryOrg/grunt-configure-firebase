@@ -59,7 +59,11 @@ module.exports = function (grunt) {
 
     // before generating any new files, remove any previously-created files.
     clean: {
-      tests: ['tmp']
+      tests: [
+        '.firebaserc',
+        'firebase.json',
+        'tmp'
+      ]
     },
 
     // configuration to be run (and then tested).
@@ -67,15 +71,20 @@ module.exports = function (grunt) {
       defaultOptions: 'production-app',
       customOptions: {
         options: {
-          dest: 'tmp/custom-options.json'
+          app: 'some-company-app',
+          'default': false,
+          destJson: 'tmp/custom-options.json',
+          destRc: 'tmp/.custom-options-rc',
+          spa: false
         },
-        firebase: 'some-company-app',
-        public: 'dist',
-        ignore: [
-          'firebase.json',
-          'bower_components/**',
-          'node_modules/**'
-        ]
+        hosting: {
+          public: 'dist',
+          ignore: [
+            'firebase.json',
+            'bower_components/**',
+            'node_modules/**'
+          ]
+        }
       }
     },
 

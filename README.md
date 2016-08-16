@@ -2,6 +2,8 @@
 
 > Configure local directory for firebase deployments
 
+**NOTE: works with firebase CLI version 3.* - if you need 2.* use 0.1.2 of this plugin**
+
 ## Getting Started
 This plugin requires Grunt `~0.4.5`
 
@@ -19,6 +21,8 @@ grunt.loadNpmTasks('grunt-configure-firebase');
 
 ## The "configureFirebase" task
 
+The task generates `firebase.json` and `.firebaserc` for a basic static web app.
+
 ### Overview
 In your project's Gruntfile, add a section named `configureFirebase` to the data object passed into `grunt.initConfig()`.
 
@@ -33,28 +37,74 @@ grunt.initConfig({
 
 ### Options
 
-#### options.dest
+#### options.app
+Type: `String`
+
+The firebase app name, if you use the object style notation
+
+app: 'some-company-app',
+'default': false,
+destJson: 'tmp/custom-options.json',
+destRc: 'tmp/.custom-options-rc',
+spa: false
+
+#### options.default
+Type: `Boolean`
+Default value: true
+
+Whether the current target should be saved in `.firebaserc` as the default app.
+
+#### options.spa
+Type: `Boolean`
+Default value: true
+
+Whether to add default rewrite rule suitable for a single page application (SPA)
+
+#### options.index
+Type: `String`
+Default value: index.html
+
+Location for default rewrite rule.
+
+#### options.destJson
 Type: `String`
 Default value: `'firebase.json'`
 
 Location to write firebase.json file.
 
+#### options.destRc
+Type: `String`
+Default value: `'.firbaserc'`
+
+Location to write .firbaserc file.
+
 #### options.json
 Type: `Object`
-Default value: `{}`
+Default value:
+```
+hosting: {
+  public: 'app',
+  rewrites: [],
+  ignore: [
+    'firebase.json',
+    'Gruntfile.js',
+    'bower.json',
+    'package.json',
+    '.travis.yml',
+    'README.md',
+    '*rc',
+    '**/node_modules/**'
+  ]
+}
+```
 
 Contents for `firebase.json` file to bet written for all targets. This is overwritten by the target-specific info.
-
-See: [Firebase Config Reference](https://www.firebase.com/docs/hosting/guide/full-config.html)
 
 ### Usage Examples
 
 #### Default Options
 
 This will write to `firebase.json`
-
-* `configureFirabse:prod` results in `firebase` property set to `my-company`
-* `configureFirabse:stage` results in `firebase` property set to `my-company-staging`
 
 ```js
 grunt.initConfig({
@@ -66,9 +116,30 @@ grunt.initConfig({
 });
 ```
 
-#### Custom Options
+`configureFirebase:prod` results in `.firebaserc` of:
 
-This will write to a custom location:
+```
+{
+  "projects": {
+    "default": "my-company",
+    "prod": "my-company"
+  }
+}
+```
+
+And then running `configureFirebase:stage` results in `.firebaserc` of:
+
+```
+{
+  "projects": {
+    "default": "my-company-staging",
+    "prod": "my-company",
+    "stage": "my-company-staging"
+  }
+}
+```
+
+#### Custom Options
 
 ```js
 grunt.initConfig({
@@ -77,11 +148,16 @@ grunt.initConfig({
       dest: 'tmp/firebase.json'
     },
     production: {
-      firebase: 'my-company',
-      public: 'dist',
-      ignore: [
-        'bower_components'
-      ]
+      options: {
+        app: 'my-company',
+        spa: false
+      },
+      hosting: {        
+        public: 'dist',
+        ignore: [
+          'bower_components'
+        ]  
+      }
     }
   },
 });
@@ -91,11 +167,13 @@ Will result in:
 
 ```
 {
-  "firebase": "my-company",
-  "public": "dist",
-  "ignore": [
-    "bower_components"
-  ]
+  "hosting": {
+    "public": "dist",
+    "rewrites": [],    
+    "ignore": [
+      "bower_components"
+    ]
+  }
 }
 ```
 
@@ -108,6 +186,10 @@ Javascript should follow the provided .jsbeautifyrc spec.
 * Run `grunt jsbeautifier:fix` to format your code according to the spec
 
 ## Release History
+
+### 1.0.0
+
+* [enhancement] Update to reflect google's new firebase configuration
 
 ### 0.1.2
 

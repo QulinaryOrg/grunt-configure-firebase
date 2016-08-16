@@ -43,6 +43,6 @@
     "gruntplugin"
   ],
   "dependencies": {
-    "merge": ">= 1.0.0"
+    "extend": "^3.0.0"
   }
 }

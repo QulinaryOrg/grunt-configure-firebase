@@ -28,21 +28,29 @@ exports.configureFirebase = {
     done();
   },
   defaultOptions: function (test) {
-    test.expect(1);
+    test.expect(2);
 
     var actual = grunt.file.read('firebase.json');
     var expected = grunt.file.read('test/expected/default-options.json');
     test.equal(actual, expected, 'Should create firebase.json using default options');
 
+    var actualrc = grunt.file.read('.firebaserc');
+    var expectedrc = grunt.file.read('test/expected/.default-options-rc');
+    test.equal(actualrc, expectedrc, 'Should create .firebaserc using default options');
+
     test.done();
   },
   customOptions: function (test) {
-    test.expect(1);
+    test.expect(2);
 
     var actual = grunt.file.read('tmp/custom-options.json');
     var expected = grunt.file.read('test/expected/custom-options.json');
     test.equal(actual, expected,
       'Should create the firebase.json file using custom destination and public directory from options');
+
+    var actualrc = grunt.file.read('tmp/.custom-options-rc');
+    var expectedrc = grunt.file.read('test/expected/.custom-options-rc');
+    test.equal(actualrc, expectedrc, 'Should create .firebaserc using custom options');
 
     test.done();
   }

@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "defaultOptions": "production-app",
+    "default": "production-app"
+  }
+}

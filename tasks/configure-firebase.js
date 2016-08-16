@@ -8,56 +8,99 @@
 
 'use strict';
 
-var merge = require('merge');
+var extend = require('extend');
 
 module.exports = function (grunt) {
 
   grunt.registerMultiTask('configureFirebase', 'Configure local directory for firebase deployments', function () {
 
-    var env = this.target,
-      options = this.options({
-        dest: 'firebase.json',
+    var options = this.options({
+        'default': 'true',
+        destJson: 'firebase.json',
+        destRc: '.firebaserc',
+        indexFile: 'index.html',
+        spa: true,
         json: {
-          firebase: '',
-          public: 'app',
-          ignore: [
-            'firebase.json',
-            '**/.*',
-            '**/node_modules/**'
-          ]
+          hosting: {
+            public: 'app',
+            rewrites: [],
+            ignore: [
+              'firebase.json',
+              'Gruntfile.js',
+              'bower.json',
+              'package.json',
+              '.travis.yml',
+              'README.md',
+              '*rc',
+              '**/node_modules/**'
+            ]
+          }
         }
       }),
-      firebaseJson;
+      firebaseJson,
+      firebaseRc = {},
+      firebaseAppName;
 
-    if (!env) {
-      grunt.fail.warn('No environment target provided');
+    if (!this.target) {
+      grunt.fail.warn('No target provided');
       return;
     }
 
     switch (typeof this.data) {
     case 'object':
-      firebaseJson = merge(options.json, this.data);
+      firebaseJson = extend(true, options.json, this.data);
       delete firebaseJson.options;
       break;
     case 'string':
-      firebaseJson = merge(options.json, {
-        firebase: this.data
-      });
+      firebaseJson = options.json;
+      options.app = this.data;
       break;
     default:
       grunt.fail.warn('Invalid data for target `%s` (expected type object or string, but %s provided)',
         this.target, typeof this.data);
     }
 
-    if (!firebaseJson.firebase) {
-      grunt.fail.fatal('No firebase property provided for target `' + this.target + '` ' +
-        '(this is the name of your firebase app and required as part of firebase.json. ' +
+    firebaseAppName = options.app || options.firebase;
+    if (!firebaseAppName) {
+      grunt.fail.fatal('No `app` or `firebase` property provided for target `' + this.target + '` ' +
+        '(this is the name of your firebase app and required as part of .firbaserc ' +
         'See https://www.firebase.com/docs/hosting/guide/full-config.html)');
       return;
     }
 
-    grunt.verbose.writeln('Writing firebase JSON file to %s: %j', options.dest, firebaseJson);
-    grunt.file.write(options.dest, JSON.stringify(firebaseJson, null, 2));
+    if (options.spa) {
+      grunt.verbose.writeln('Option `spa` is enabled; adding rewrite to `%s`', options.indexFile);
+      firebaseJson.hosting.rewrites.push({
+        source: '**',
+        destination: '/' + options.indexFile
+      });
+    }
+
+    grunt.verbose.write('Writing file `%s` with contents: %j', options.destJson, firebaseJson);
+    grunt.verbose.or.write('Writing file `%s`...', options.destJson);
+    grunt.file.write(options.destJson, JSON.stringify(firebaseJson, null, 2));
+    grunt.log.ok();
+
+    if (grunt.file.exists(options.destRc)) {
+      grunt.log.writeln('File `%s` exists; will append new app `%s`', options.destRc, firebaseAppName);
+      firebaseRc = grunt.file.readJSON(options.destRc);
+    } else {
+      firebaseRc = {};
+    }
+    firebaseRc.projects = firebaseRc.projects || {};
+    firebaseRc.projects[this.target] = firebaseAppName;
+
+    if (options.default) {
+      grunt.verbose.writeln('Option `default` is enabled; setting default app to `%s`', firebaseAppName);
+      firebaseRc.projects['default'] = firebaseAppName;
+    }
+
+    grunt.verbose.write('Writing file `%s` with contents: %j', options.destRc, firebaseRc);
+    grunt.verbose.or.write('Writing file `%s`...', options.destRc);
+    grunt.file.write(options.destRc, JSON.stringify(firebaseRc, null, 2));
+    grunt.log.ok();
+
+    grunt.log.ok('Created/updated `%s` and `%s`', options.destJson, options.destRc);
   });
 
 };

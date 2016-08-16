@@ -8,9 +8,14 @@
       }
     ],
     "ignore": [
+      "Gruntfile.js",
+      "README.md",
+      ".travis.yml",
+      "*rc",
+      "**/node_modules/**",
+      "bower.json",
       "firebase.json",
-      "**/.*",
-      "**/node_modules/**"
+      "package.json"
     ]
   }
 }

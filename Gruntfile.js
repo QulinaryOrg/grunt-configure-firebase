@@ -19,7 +19,8 @@ module.exports = function (grunt) {
     // make sure code styles are up to par and there are no obvious mistakes
     jshint: {
       options: {
-        jshintrc: '.jshintrc'
+        jshintrc: '.jshintrc',
+        reporterOutput: '',
       },
       all: {
         src: [

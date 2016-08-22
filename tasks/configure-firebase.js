@@ -72,7 +72,9 @@ module.exports = function (grunt) {
       return;
     }
 
+    firebaseJson.hosting = firebaseJson.hosting || {};
     firebaseJson.hosting.rewrites = firebaseJson.hosting.rewrites || [];
+
     if (options.spa) {
       grunt.verbose.writeln('Option `spa` is enabled; adding rewrite to `%s`', options.indexFile);
       firebaseJson.hosting.rewrites.push({

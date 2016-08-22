@@ -1,7 +1,7 @@
 {
   "name": "grunt-configure-firebase",
   "description": "Configure local directory for firebase deployments",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://github.com/QulinaryOrg/grunt-configure-firebase",
   "author": {
     "name": "Matthew J. Martin",

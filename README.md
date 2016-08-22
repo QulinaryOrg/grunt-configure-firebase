@@ -189,6 +189,10 @@ Javascript should follow the provided .jsbeautifyrc spec.
 
 ## Release History
 
+### 1.0.2
+
+* [bug] Fix error "Warning: Cannot read property 'push' of undefined"
+
 ### 1.0.1
 
 * [bug] Fix jshint when using v6.3.1
